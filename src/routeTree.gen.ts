@@ -10,12 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AiConfigurationRouteImport } from './routes/ai-configuration'
 import { Route as BusinessSettingsRouteImport } from './routes/business-settings'
 import { Route as CallsRouteImport } from './routes/calls'
+import { Route as CallsCallIdRouteImport } from './routes/calls.$callId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiConfigurationRoute = AiConfigurationRouteImport.update({
+  id: '/ai-configuration',
+  path: '/ai-configuration',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessSettingsRoute = BusinessSettingsRouteImport.update({
@@ -28,35 +35,63 @@ const CallsRoute = CallsRouteImport.update({
   path: '/calls',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CallsCallIdRoute = CallsCallIdRouteImport.update({
+  id: '/$callId',
+  path: '/$callId',
+  getParentRoute: () => CallsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-configuration': typeof AiConfigurationRoute
   '/business-settings': typeof BusinessSettingsRoute
-  '/calls': typeof CallsRoute
+  '/calls': typeof CallsRouteWithChildren
+  '/calls/$callId': typeof CallsCallIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-configuration': typeof AiConfigurationRoute
   '/business-settings': typeof BusinessSettingsRoute
-  '/calls': typeof CallsRoute
+  '/calls': typeof CallsRouteWithChildren
+  '/calls/$callId': typeof CallsCallIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-configuration': typeof AiConfigurationRoute
   '/business-settings': typeof BusinessSettingsRoute
-  '/calls': typeof CallsRoute
+  '/calls': typeof CallsRouteWithChildren
+  '/calls/$callId': typeof CallsCallIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/business-settings' | '/calls'
+  fullPaths:
+    | '/'
+    | '/ai-configuration'
+    | '/business-settings'
+    | '/calls'
+    | '/calls/$callId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/business-settings' | '/calls'
-  id: '__root__' | '/' | '/business-settings' | '/calls'
+  to:
+    | '/'
+    | '/ai-configuration'
+    | '/business-settings'
+    | '/calls'
+    | '/calls/$callId'
+  id:
+    | '__root__'
+    | '/'
+    | '/ai-configuration'
+    | '/business-settings'
+    | '/calls'
+    | '/calls/$callId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiConfigurationRoute: typeof AiConfigurationRoute
   BusinessSettingsRoute: typeof BusinessSettingsRoute
-  CallsRoute: typeof CallsRoute
+  CallsRoute: typeof CallsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +101,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-configuration': {
+      id: '/ai-configuration'
+      path: '/ai-configuration'
+      fullPath: '/ai-configuration'
+      preLoaderRoute: typeof AiConfigurationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business-settings': {
@@ -82,13 +124,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CallsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calls/$callId': {
+      id: '/calls/$callId'
+      path: '/$callId'
+      fullPath: '/calls/$callId'
+      preLoaderRoute: typeof CallsCallIdRouteImport
+      parentRoute: typeof CallsRoute
+    }
   }
 }
 
+interface CallsRouteChildren {
+  CallsCallIdRoute: typeof CallsCallIdRoute
+}
+
+const CallsRouteChildren: CallsRouteChildren = {
+  CallsCallIdRoute: CallsCallIdRoute,
+}
+
+const CallsRouteWithChildren = CallsRoute._addFileChildren(CallsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiConfigurationRoute: AiConfigurationRoute,
   BusinessSettingsRoute: BusinessSettingsRoute,
-  CallsRoute: CallsRoute,
+  CallsRoute: CallsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
