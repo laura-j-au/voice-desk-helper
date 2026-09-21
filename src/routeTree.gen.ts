@@ -10,33 +10,98 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AiConfigurationRouteImport } from './routes/ai-configuration'
+import { Route as BusinessSettingsRouteImport } from './routes/business-settings'
+import { Route as CallsRouteImport } from './routes/calls'
+import { Route as CallsIndexRouteImport } from './routes/calls.index'
+import { Route as CallsCallIdRouteImport } from './routes/calls.$callId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiConfigurationRoute = AiConfigurationRouteImport.update({
+  id: '/ai-configuration',
+  path: '/ai-configuration',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessSettingsRoute = BusinessSettingsRouteImport.update({
+  id: '/business-settings',
+  path: '/business-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CallsRoute = CallsRouteImport.update({
+  id: '/calls',
+  path: '/calls',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CallsIndexRoute = CallsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CallsRoute,
+} as any)
+const CallsCallIdRoute = CallsCallIdRouteImport.update({
+  id: '/$callId',
+  path: '/$callId',
+  getParentRoute: () => CallsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-configuration': typeof AiConfigurationRoute
+  '/business-settings': typeof BusinessSettingsRoute
+  '/calls': typeof CallsRouteWithChildren
+  '/calls/$callId': typeof CallsCallIdRoute
+  '/calls/': typeof CallsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-configuration': typeof AiConfigurationRoute
+  '/business-settings': typeof BusinessSettingsRoute
+  '/calls/$callId': typeof CallsCallIdRoute
+  '/calls': typeof CallsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-configuration': typeof AiConfigurationRoute
+  '/business-settings': typeof BusinessSettingsRoute
+  '/calls': typeof CallsRouteWithChildren
+  '/calls/$callId': typeof CallsCallIdRoute
+  '/calls/': typeof CallsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/ai-configuration'
+    | '/business-settings'
+    | '/calls'
+    | '/calls/$callId'
+    | '/calls/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/ai-configuration'
+    | '/business-settings'
+    | '/calls/$callId'
+    | '/calls'
+  id:
+    | '__root__'
+    | '/'
+    | '/ai-configuration'
+    | '/business-settings'
+    | '/calls'
+    | '/calls/$callId'
+    | '/calls/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiConfigurationRoute: typeof AiConfigurationRoute
+  BusinessSettingsRoute: typeof BusinessSettingsRoute
+  CallsRoute: typeof CallsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +113,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai-configuration': {
+      id: '/ai-configuration'
+      path: '/ai-configuration'
+      fullPath: '/ai-configuration'
+      preLoaderRoute: typeof AiConfigurationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/business-settings': {
+      id: '/business-settings'
+      path: '/business-settings'
+      fullPath: '/business-settings'
+      preLoaderRoute: typeof BusinessSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calls': {
+      id: '/calls'
+      path: '/calls'
+      fullPath: '/calls'
+      preLoaderRoute: typeof CallsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calls/': {
+      id: '/calls/'
+      path: '/'
+      fullPath: '/calls/'
+      preLoaderRoute: typeof CallsIndexRouteImport
+      parentRoute: typeof CallsRoute
+    }
+    '/calls/$callId': {
+      id: '/calls/$callId'
+      path: '/$callId'
+      fullPath: '/calls/$callId'
+      preLoaderRoute: typeof CallsCallIdRouteImport
+      parentRoute: typeof CallsRoute
+    }
   }
 }
 
+interface CallsRouteChildren {
+  CallsCallIdRoute: typeof CallsCallIdRoute
+  CallsIndexRoute: typeof CallsIndexRoute
+}
+
+const CallsRouteChildren: CallsRouteChildren = {
+  CallsCallIdRoute: CallsCallIdRoute,
+  CallsIndexRoute: CallsIndexRoute,
+}
+
+const CallsRouteWithChildren = CallsRoute._addFileChildren(CallsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiConfigurationRoute: AiConfigurationRoute,
+  BusinessSettingsRoute: BusinessSettingsRoute,
+  CallsRoute: CallsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
