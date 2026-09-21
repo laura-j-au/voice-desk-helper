@@ -6,7 +6,7 @@ import { PageHeading } from "@/components/app/page-heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,4 +39,4 @@ function AIConfiguration(){
  <div className="flex justify-end border-t pt-6"><Button onClick={()=>toast.success("AI configuration saved")}><Save/>Save Configuration</Button></div></div></>;
 }
 function Section({number,title,description,icon:Icon,children}:{number:string;title:string;description:string;icon:typeof Check;children:React.ReactNode}) { return <Card className="rounded-lg shadow-sm"><CardHeader className="flex-row gap-4 space-y-0"><span className="grid size-9 shrink-0 place-items-center rounded-md bg-secondary text-primary"><Icon className="size-4"/></span><div><div className="mb-1 flex items-center gap-2"><span className="text-xs font-bold text-primary">{number.padStart(2,"0")}</span><CardTitle className="text-base">{title}</CardTitle></div><p className="text-sm text-muted-foreground">{description}</p></div></CardHeader><CardContent>{children}</CardContent></Card> }
-function PreviewGreeting(){return <Dialog><DialogTrigger asChild><Button variant="outline"><Bot/>Preview Greeting</Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>Greeting preview</DialogTitle><DialogDescription>This is how the AI will introduce itself on an incoming call.</DialogDescription></DialogHeader><div className="rounded-lg bg-muted p-4 text-sm leading-6">“Hi, you’ve reached West Coast Plumbing. I’m the automated front-desk assistant. How can I help you today?”</div><DialogFooter><DialogTrigger asChild><Button>Done</Button></DialogTrigger></DialogFooter></DialogContent></Dialog>}
+function PreviewGreeting(){return <Dialog><DialogTrigger asChild><Button variant="outline"><Bot/>Preview Greeting</Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>Greeting preview</DialogTitle><DialogDescription>This is how the AI will introduce itself on an incoming call.</DialogDescription></DialogHeader><div className="rounded-lg bg-muted p-4 text-sm leading-6">“Hi, you’ve reached West Coast Plumbing. I’m the automated front-desk assistant. How can I help you today?”</div><DialogFooter><DialogClose asChild><Button>Done</Button></DialogClose></DialogFooter></DialogContent></Dialog>}
