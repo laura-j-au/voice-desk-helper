@@ -27,7 +27,7 @@ const callTypes=["New service enquiry","Existing customer or existing job","Gene
 const safety=["Never confirm an appointment","Never guarantee availability","Never provide an unapproved price","Never negotiate","Never take payment information","Never provide professional or emergency advice","Clearly say when human follow-up is required"];
 
 function AIConfiguration(){
- const [selected,setSelected]=useState(()=>new Set(fields.map(([n])=>n))); const [faqs,setFaqs]=useState(initialFaqs); const [fallback,setFallback]=useState("I’m not able to confirm that, but I can record your question and ask someone from the team to contact you.");
+ const [selected,setSelected]=useState<Set<string>>(()=>new Set(fields.map(([n])=>n))); const [faqs,setFaqs]=useState(initialFaqs); const [fallback,setFallback]=useState("I’m not able to confirm that, but I can record your question and ask someone from the team to contact you.");
  const toggle=(name:string,required:boolean)=>{if(required)return;setSelected(s=>{const n=new Set(s);n.has(name)?n.delete(name):n.add(name);return n})};
  const updateFaq=(id:number,key:"question"|"answer",value:string)=>setFaqs(f=>f.map(x=>x.id===id?{...x,[key]:value}:x));
  return <><PageHeading title="AI configuration" description="Control what the assistant collects, answers, and must never do." actions={<PreviewGreeting/>}/>
